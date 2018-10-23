@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Rice SCM</title>
+
+    {% include 'base/css.html' %}
+    {% include 'base/bootstrap_defaults.html' %}
+  </head>
+  <body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{% url 'home' %}">Dashboard</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sourcing <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="{% url 'sourcing' %}">Sourcing</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="{% url 'overview' %}">Overview</a></li>
+					<li><a href="{% url 'planning' %}">Planning</a></li>
+					<li><a href="{% url 'schedule' %}">Schedule Product Deliveries</a></li>
+					<li><a href="{% url 'receive' %}">Receive Product</a></li>
+					<li><a href="{% url 'verify' %}">Verify Product</a></li>
+					<li><a href="{% url 'transfer' %}">Transfer Product</a></li>
+					<li><a href="{% url 'payment' %}">Authorize Supplier Payment</a></li>
+					<li><a href="{% url 'cost' %}">Cost</a></li>
+				</ul>
+				</li>
+				<li><a href="#">Deliver</a></li>
+				<li><a href="#">Make</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/admin/performance/transaksi/">Transaction</a></li>
+				<li><a href="/admin">Login</a></li>
+			</ul>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+    <div class='container'>
+    {% block content %}
+    {% endblock content %}
+    </div>
+    {% include 'base/js.html' %}
+    <script>
+    $(document).ready(function(){
+      {% block jquery %}{% endblock %}
+    })
+    </script>
+  </body>
+</html>

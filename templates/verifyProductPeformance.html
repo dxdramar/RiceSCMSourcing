@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+var monthLabels = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/monthlabels/',
+    success: function(data){
+        monthLabels = data.labels
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var totalorderData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/totalorder/',
+    success: function(data){
+        totalorderData = data.default
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var contentData = []
+var CorrectContent = []
+var WrongContent = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/correctcontent/',
+    success: function(data){
+        contentData = data.default
+        CorrectContent = data.last
+        WrongContent = data.notcorrect
+        ContentValue = data.value * 100
+        document.getElementById("ContentValue").innerHTML += ContentValue.toFixed(3)
+        document.getElementById("ContentSnorm").innerHTML += data.snorm.toFixed(3)
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var RejectionData = []
+var Rejectionsmax = []
+var Rejectionsmin = []
+var RejectionLast = []
+var CorrectOrder = []
+var RejectionValue = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/rejection/',
+    success: function(data){
+        RejectionData = data.default
+        RejectionLast = data.last
+        CorrectOrder = data.correct
+        RejectionValue = data.value * 100
+        document.getElementById("RejectionValue").innerHTML += RejectionValue.toFixed(3)
+        document.getElementById("RejectionSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var verifytimeData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/verifytime/',
+    success: function(data){
+        verifytimeData = data.default
+        document.getElementById("VerifyTimeLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("VerifyTimeSmax").innerHTML += data.smax
+        document.getElementById("VerifyTimeSmin").innerHTML += data.smin
+        document.getElementById("VerifyTimeSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("correct");
+    var ctx2 = document.getElementById("correct2");
+    var ctx3 = document.getElementById("reject");
+    var ctx4 = document.getElementById("reject2");
+    var ctx5 = document.getElementById("cycletime");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: '# of Correct Content Order',
+                data: contentData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '# of Orders',
+                data: totalorderData,
+                borderWidth: 1
+            },
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels:['# of Correct Content', '# of Wrong Content'],
+            datasets: [{
+                data: [CorrectContent, WrongContent],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+        }
+    });
+    
+    var myChart = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: '# of Reject',
+                data: RejectionData,
+                backgroundColor: [
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderColor: [
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '# of Orders',
+                data: totalorderData,
+                borderWidth: 1
+            },
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx4, {
+        type: 'doughnut',
+        data: {
+            labels:['# of Correct Order', '# of Reject'],
+            datasets: [{
+                data: [CorrectOrder, RejectionLast],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+        }
+    });
+
+    var myChart = new Chart(ctx5, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Verify Time Cycle Time',
+                data: verifytimeData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+{% endblock %}
+</script>
+
+{% block content %}
+<h1 class="text-center">VERIFY PRODUCT PERFORMANCE</h1>
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric % Orders Received with Correct Content</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="correct" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3 text-center'>
+            <h3><b>Value: </b> <b id="ContentValue"></b><b> %</b></h3>
+            <canvas id="correct2" width="200" height="200"></canvas>
+            <h3><b>Score: </b> <b id="ContentSnorm"></b><b> %</b></h3>
+        </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Supplier Rejection Rate</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="reject" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3 text-center'>
+                <h3><b>Value: </b> <b id="RejectionValue"></b><b> %</b></h3>
+                <canvas id="reject2" width="200" height="200"></canvas>
+                <h3><b>Score: </b> <b id="RejectionSnorm"></b><b> %</b></h3>
+            </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Verify Product Cycle Time</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="cycletime" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="VerifyTimeLast"></b> minutes</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="VerifyTimeSmax"></b> minutes</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="VerifyTimeSmin"></b> minutes</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="VerifyTimeSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>    
+    </div>
+</div>
+
+
+{% endblock content %}

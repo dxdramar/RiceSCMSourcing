@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<center>
+<br>
+<br>
+<br>
+<br>
+<a type="button" class="btn btn-default">Sourcing Performance</a>
+<br>
+<br>
+<br>
+<br>
+    <a href="{% url 'planning' %}" type="button" class="btn btn-default">Planning</a>
+    <a href="{% url 'schedule' %}" type="button" class="btn btn-default">Schedule Product Deliveries</a>
+    <a href="{% url 'receive' %}" type="button" class="btn btn-default">Receive Product</a>
+    <a href="{% url 'verify' %}" type="button" class="btn btn-default">Verify Product</a>
+    <a href="{% url 'transfer' %}" type="button" class="btn btn-default">Transfer Product</a>
+    <a href="{% url 'payment' %}" type="button" class="btn btn-default">Authorize Supplier Payment</a>
+    <a href="{% url 'cost' %}" type="button" class="btn btn-default">Cost</a>
+<br>
+<br>
+<br>
+<br>
+    <a href="/admin/performance/annualdata/" type="button" class="btn btn-default">Annual Data</a>
+    <a href="/admin/performance/transaksi/" type="button" class="btn btn-default">Transaction</a>
+</center>
+{% endblock content %}

@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+var fAccuracyValue = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/forecastaccuracy/',
+    success: function(data){
+        fAccuracyValue = data.value * 100
+        document.getElementById("fAccuracyValue").innerHTML += fAccuracyValue.toFixed(3)
+        document.getElementById("fAccuracySmax").innerHTML += data.smax
+        document.getElementById("fAccuracySmin").innerHTML += data.smin
+        document.getElementById("fAccuracySnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+$.ajax({
+    method: "GET",
+    url: '/api/planningtime/',
+    success: function(data){
+        document.getElementById("pTimeValue").innerHTML += data.value.toFixed(3)
+        document.getElementById("pTimeSmax").innerHTML += data.smax
+        document.getElementById("pTimeSmin").innerHTML += data.smin
+        document.getElementById("pTimeSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("accuracy");
+    var ctx2 = document.getElementById("cycletime");
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Votes',
+            data: defaultData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+    });
+    var myChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '# of Votes',
+                data: defaultData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+<h1 class="text-center">PLANNING PERFORMANCE</h1>
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Forecast Accuracy</h3>
+        <div class='col-sm-3'>
+            <table class="h3">
+                    <tr>
+                        <td>Value</td>
+                        <td>:</td>
+                        <td><b id="fAccuracyValue"></b> %</td>
+                    </tr>
+                    <tr>
+                        <td>Smax</td>
+                        <td>:</td>
+                        <td><b id="fAccuracySmax"></b> %</td>
+                    </tr>
+                    <tr>
+                        <td>Smin</td>
+                        <td>:</td>
+                        <td><b id="fAccuracySmin"></b> %</td>
+                    </tr>
+                    <tr>
+                        <td>Score<br></td>
+                        <td>:</td>
+                        <td><b id="fAccuracySnorm"></b> %</td>
+                    </tr>
+                </table>
+        </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Planning Cycle Time</h3>
+        <div class='col-sm-3'>
+            <table class="h3">
+                    <tr>
+                        <td>Value</td>
+                        <td>:</td>
+                        <td><b id="pTimeValue"></b> Days</td>
+                    </tr>
+                    <tr>
+                        <td>Smax</td>
+                        <td>:</td>
+                        <td><b id="pTimeSmax"></b> Days</td>
+                    </tr>
+                    <tr>
+                        <td>Smin</td>
+                        <td>:</td>
+                        <td><b id="pTimeSmin"></b> Days</td>
+                    </tr>
+                    <tr>
+                        <td>Score<br></td>
+                        <td>:</td>
+                        <td><b id="pTimeSnorm"></b> %</td>
+                    </tr>
+                </table>
+        </div>    
+    </div>
+</div>
+
+{% endblock content %}

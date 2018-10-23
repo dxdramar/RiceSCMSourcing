@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+var labelsPerformance = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/performancelabels/',
+    success: function(data){
+        labelsPerformance = data.labels
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var reliability = []
+var responsiveness = []
+var sourcingCost = []
+var assetManagement = []
+var sourcingScore = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/score/',
+    success: function(data){
+        reliability = data.lreliability.toFixed(3)
+        responsiveness = data.lresponsiveness.toFixed(3)
+        sourcingCost = data.lsourcing_cost.toFixed(3)
+        assetManagement = data.lasset_management.toFixed(3)
+        sourcingScore = data.gtotal_score
+        document.getElementById("gtotal_score").innerHTML += data.gtotal_score.toFixed(3)
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var chartData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/chart/data/',
+    success: function(data){
+        chartData = data.default
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("sourcing");
+    var ctx2 = document.getElementById("make");
+    var ctx3 = document.getElementById("deliver");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labelsPerformance,
+            datasets: [{
+                label: 'Performance',
+                data: [reliability, responsiveness, sourcingCost, assetManagement],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: labelsPerformance,
+            datasets: [{
+                label: 'Performance',
+                data: chartData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: labelsPerformance,
+            datasets: [{
+                label: 'Performance',
+                data: chartData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+var gaugeOptions = {
+
+    chart: {
+        type: 'solidgauge'
+    },
+
+    title: null,
+
+    pane: {
+        center: ['50%', '85%'],
+        size: '100%',
+        startAngle: -90,
+        endAngle: 90,
+        background: {
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+            innerRadius: '60%',
+            outerRadius: '100%',
+            shape: 'arc'
+        }
+    },
+
+    tooltip: {
+        enabled: false
+    },
+
+    // the value axis
+    yAxis: {
+        stops: [
+            [0.1, '#55BF3B'], // green
+            [0.5, '#DDDF0D'], // yellow
+            [0.9, '#DF5353'] // red
+        ],
+        lineWidth: 0,
+        minorTickInterval: null,
+        tickAmount: 2,
+        title: {
+            y: -70
+        },
+        labels: {
+            y: 16
+        }
+    },
+
+    plotOptions: {
+        solidgauge: {
+            dataLabels: {
+                y: 5,
+                borderWidth: 0,
+                useHTML: true
+            }
+        }
+    }
+};
+
+var overallScore = (68.347 + 100 + 100) / 3
+
+// The speed gauge
+var chartSpeed = Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions, {
+    yAxis: {
+        min: 0,
+        max: 100,
+    },
+
+    credits: {
+        enabled: false
+    },
+
+    series: [{
+        name: 'Overall Performance',
+        data: [overallScore],
+        dataLabels: {
+            format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y} %</span><br/>'
+        },
+        tooltip: {
+            valueSuffix: ' %'
+        }
+    }]
+
+}));
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h1 class='text-center'>RICE SUPPLY CHAIN PERFORMANCE MONITORING DASHBOARD</h1>
+        <div class='col-sm-3 text-center'>
+        </div>
+        <div class='col-sm-6 text-center'>
+            <div id="container-speed" width="400" height="400"></div>
+            <h2 class='text-center'>Overall Performance</h2>
+        </div>
+        <div class='col-sm-3 text-center'>
+        </div>
+    </div>
+</div>
+
+<br><br><br>
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <div class='col-sm-4 text-center'>
+            <canvas id="sourcing" width="400" height="400"></canvas>
+            <h2>Sourcing</h2>
+            <h1><b id="gtotal_score"></b><b> %</b></h1>
+            <a type="button" href="{% url 'overview' %}" class="btn btn-success">Select</a>
+        </div>
+        <div class='col-sm-4 text-center'>
+            <canvas id="make" width="400" height="400"></canvas>
+            <h2>Make</h2>
+            <h1><b>100%</b></h1>
+            <button type="button" class="btn btn-success">Select</button>
+        </div>
+        <div class='col-sm-4 text-center'>
+            <canvas id="deliver" width="400" height="400"></canvas>
+            <h2>Deliver</h2>
+            <h1><b>100%</b></h1>
+            <button type="button" class="btn btn-success">Select</button>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

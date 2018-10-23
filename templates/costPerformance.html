@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+$.ajax({
+    method: "GET",
+    url: '/api/monthlabels/',
+    success: function(data){
+        monthLabels = data.labels
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var laborCostData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/laborcost/',
+    success: function(data){
+        laborCostData = data.default
+        document.getElementById("laborCostLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("laborCostSmax").innerHTML += data.smax
+        document.getElementById("laborCostSmin").innerHTML += data.smin
+        document.getElementById("laborCostSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var materialCostData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/materialcost/',
+    success: function(data){
+        materialCostData = data.default
+        document.getElementById("materialCostLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("materialCostSmax").innerHTML += data.smax
+        document.getElementById("materialCostSmin").innerHTML += data.smin
+        document.getElementById("materialCostSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("labor");
+    var ctx2 = document.getElementById("material");
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: monthLabels,
+        datasets: [{
+            label: 'Labor Cost',
+            data: laborCostData,
+            backgroundColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+    });
+    var myChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Material Cost',
+                data: materialCostData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+
+{% endblock %}
+</script>
+
+{% block content %}
+<h1 class="text-center">COST PERFORMANCE</h1>
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Labor Cost</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="labor" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="laborCostLast"></b> Rp/Kg</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="laborCostSmax"></b> Rp/Kg</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="laborCostSmin"></b> Rp/Kg</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="laborCostSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Material Cost</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="material" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="materialCostLast"></b> Rp/Kg</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="materialCostSmax"></b> Rp/Kg</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="materialCostSmin"></b> Rp/Kg</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="materialCostSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>    
+    </div>
+</div>
+
+{% endblock content %}

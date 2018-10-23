@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+$.ajax({
+    method: "GET",
+    url: '/api/monthlabels/',
+    success: function(data){
+        monthLabels = data.labels
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var transferTimeData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/transfertime/',
+    success: function(data){
+        transferTimeData = data.default
+        document.getElementById("TransferTimeLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("TransferTimeSmax").innerHTML += data.smax
+        document.getElementById("TransferTimeSmin").innerHTML += data.smin
+        document.getElementById("TransferTimeSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+
+$.ajax({
+    method: "GET",
+    url: '/api/idos/',
+    success: function(data){
+        document.getElementById("IDoSValue").innerHTML += data.value.toFixed(3)
+        document.getElementById("IDoSSmax").innerHTML += data.smax
+        document.getElementById("IDoSSmin").innerHTML += data.smin
+        document.getElementById("IDoSSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("transfer");
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: monthLabels,
+        datasets: [{
+            label: 'Transfer Product Cycle Time',
+            data: transferTimeData,
+            backgroundColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+<h1 class="text-center">TRANSFER PRODUCT PERFORMANCE</h1>
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Transfer Product Cycle Time</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="transfer" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="TransferTimeLast"></b> minutes</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="TransferTimeSmax"></b> minutes</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="TransferTimeSmin"></b> minutes</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="TransferTimeSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>   
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Inventory Days of Supply</h3>
+        <div class='col-sm-3'>
+                <table class="h3">
+                    <tr>
+                        <td>Value</td>
+                        <td>:</td>
+                        <td><b id="IDoSValue"></b> Days</td>
+                    </tr>
+                    <tr>
+                        <td>Smax</td>
+                        <td>:</td>
+                        <td><b id="IDoSSmax"></b> Days</td>
+                    </tr>
+                    <tr>
+                        <td>Smin</td>
+                        <td>:</td>
+                        <td><b id="IDoSSmin"></b> Days</td>
+                    </tr>
+                    <tr>
+                        <td>Score<br></td>
+                        <td>:</td>
+                        <td><b id="IDoSSnorm"></b> %</td>
+                    </tr>
+                </table>
+            </div>    
+    </div>
+</div>
+
+{% endblock content %}

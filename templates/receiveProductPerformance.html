@@ -1,0 +1,499 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+$.ajax({
+    method: "GET",
+    url: '/api/monthlabels/',
+    success: function(data){
+        monthLabels = data.labels
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var totalorderData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/totalorder/',
+    success: function(data){
+        totalorderData = data.default
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var targetBuyData = []
+var targetBuyLast = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/targetbuy/',
+    success: function(data){
+        targetBuyData = data.target
+        targetBuyLast = data.last
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var totalBuyData = []
+var totalBuyLast = []
+var BuyValue = []
+var totalBuyKurang = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/totalbuy/',
+    success: function(data){
+        totalBuyData = data.default
+        totalBuyLast = data.last
+        totalBuyKurang = data.kurang
+        BuyValue = data.value * 100
+        document.getElementById("BuyValue").innerHTML += BuyValue.toFixed(3)
+        document.getElementById("BuySnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var packagingData = []
+var CorrectPackaging = []
+var WrongPackaging = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/correctpackaging/',
+    success: function(data){
+        packagingData = data.default
+        CorrectPackaging = data.last
+        WrongPackaging = data.notcorrect
+        PackagingValue = data.value * 100
+        document.getElementById("PackagingValue").innerHTML += PackagingValue.toFixed(3)
+        document.getElementById("PackagingSnorm").innerHTML += data.snorm.toFixed(3)
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var onTimeData = []
+var onTime = []
+var notOnTime = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/ontime/',
+    success: function(data){
+        onTimeData = data.default
+        onTime = data.last
+        notOnTime = data.notontime
+        onTimeValue = data.value * 100
+        document.getElementById("onTimeValue").innerHTML += onTimeValue.toFixed(3)
+        document.getElementById("onTimeSnorm").innerHTML += data.snorm.toFixed(3)
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var ReceivingTimeData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/receivingtime/',
+    success: function(data){
+        ReceivingTimeData = data.default
+        document.getElementById("ReceivingTimeLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("ReceivingTimeSmax").innerHTML += data.smax
+        document.getElementById("ReceivingTimeSmin").innerHTML += data.smin
+        document.getElementById("ReceivingTimeSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("complete");
+    var ctx2 = document.getElementById("complete2");
+    var ctx3 = document.getElementById("packaging");
+    var ctx4 = document.getElementById("packaging2");
+    var ctx5 = document.getElementById("ontime");
+    var ctx6 = document.getElementById("ontime2");
+    var ctx7 = document.getElementById("cycletime");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: '# of Bought',
+                data: totalBuyData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '# of Target Buy',
+                data: targetBuyData,
+                borderWidth: 1
+            },
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels:['# of Bought', '# of Unfullfiled'],
+            datasets: [{
+                data: [totalBuyLast, totalBuyKurang],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+        }
+    });
+    
+    var myChart = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: '# of Correct Packaging Order',
+                data: packagingData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '# of Orders',
+                data: totalorderData,
+                borderWidth: 1
+            },
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx4, {
+        type: 'doughnut',
+        data: {
+            labels:['# of Correct Packaging', '# of Wrong Packaging'],
+            datasets: [{
+                data: [CorrectPackaging, WrongPackaging],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+        }
+    });
+
+    var myChart = new Chart(ctx5, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: '# of On Time Order',
+                data: onTimeData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '# of Orders',
+                data: totalorderData,
+                borderWidth: 1
+            },
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx6, {
+        type: 'doughnut',
+        data: {
+            labels:['# of On Time Orders', '# of Not On Time Orders'],
+            datasets: [{
+                data: [onTime, notOnTime],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+        }
+    });
+    
+    var myChart = new Chart(ctx7, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Receiving Cycle Time',
+                data: ReceivingTimeData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+
+
+{% endblock %}
+</script>
+
+{% block content %}
+<h1 class="text-center">RECEIVE PRODUCT PERFORMANCE</h1>
+<div class='row'>
+    <div class='col-sm-12'>
+        <h3>Metric % Orders Processed Complete</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="complete" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3 text-center'>
+            <h3><b>Value: </b> <b id="BuyValue"></b><b> %</b></h3>
+            <canvas id="complete2" width="200" height="200"></canvas>
+            <h3><b>Score: </b> <b id="BuySnorm"></b><b> %</b></h3>
+        </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12'>
+        <h3>Metric % Orders Received with Correct Packaging</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="packaging" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3 text-center'>
+            <h3><b>Value: </b> <b id="PackagingValue"></b><b> %</b></h3>
+            <canvas id="packaging2" width="200" height="200"></canvas>
+            <h3><b>Score: </b> <b id="PackagingSnorm"></b><b> %</b></h3>
+        </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12'>
+        <h3>Metric % Orders Received On-Time</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="ontime" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3 text-center'>
+            <h3><b>Value: </b> <b id="onTimeValue"></b><b> %</b></h3>
+            <canvas id="ontime2" width="200" height="200"></canvas>
+            <h3><b>Score: </b> <b id="onTimeSnorm"></b><b> %</b></h3>
+        </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12'>
+        <h3>Metric Receiving Cycle Time</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="cycletime" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="ReceivingTimeLast"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="ReceivingTimeSmax"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="ReceivingTimeSmin"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="ReceivingTimeSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>    
+    </div>
+</div>
+
+
+{% endblock content %}

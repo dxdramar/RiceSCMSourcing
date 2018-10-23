@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+$.ajax({
+    method: "GET",
+    url: '/api/monthlabels/',
+    success: function(data){
+        monthLabels = data.labels
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var totalSChange = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/schedulechange/',
+    success: function(data){
+        totalSChange = data.default
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var sChangeInLT = []
+var notInLT = []
+var sChangeInLTLast = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/schedulechangelt3d/',
+    success: function(data){
+        sChangeInLT = data.default
+        notInLT = data.notinlt
+        sChangeInLTLast = data.last
+        sChangeInLTValue = data.value * 100
+        document.getElementById("sChangeInLTValue").innerHTML += sChangeInLTValue.toFixed(3)
+        document.getElementById("sChangeInLTSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+
+var averageSCData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/averagesc/',
+    success: function(data){
+        averageSCData = data.default
+        document.getElementById("AverageSCLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("AverageSCSmax").innerHTML += data.smax
+        document.getElementById("AverageSCSmin").innerHTML += data.smin
+        document.getElementById("AverageSCSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var POTimeData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/potime/',
+    success: function(data){
+        POTimeData = data.default
+        document.getElementById("POTimeLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("POTimeSmax").innerHTML += data.smax
+        document.getElementById("POTimeSmin").innerHTML += data.smin
+        document.getElementById("POTimeSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+
+function setChart(){
+    var ctx = document.getElementById("schedule");
+    var ctx2 = document.getElementById("schedule2");
+    var ctx3 = document.getElementById("average");
+    var ctx4 = document.getElementById("cycletime");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: '# of Schedule Change Less Than Equal 3 Days',
+                data: sChangeInLT,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '# of Schedule Change',
+                data: totalSChange,
+                borderWidth: 1
+            },
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+
+    var myChart = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels:['# of Schedule Change LTE 3 Days', '# of Schedule Change GT 3 Days'],
+            datasets: [{
+                data: [sChangeInLTLast, notInLT],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(186, 38, 38, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+        }
+    });
+
+    var myChart = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Average Schedule Change',
+                data: averageSCData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+
+    var myChart = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Purchase Order Cycle Time',
+                data: POTimeData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+
+{% endblock %}
+</script>
+
+{% block content %}
+<h1 class="text-center">SCHEDULE PRODUCT DELIVERY PERFORMANCE</h1>
+<div class='row'>
+    <div class='col-sm-12'>
+        <h3>Metric % Schedule Change Within Supplier Leadtime</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="schedule" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3 text-center'>
+            <h3><b>Value: </b> <b id="sChangeInLTValue"></b><b> %</b></h3>
+            <canvas id="schedule2" width="200" height="200"></canvas>
+            <h3><b>Score: </b> <b id="sChangeInLTSnorm"></b><b> %</b></h3>
+        </div>    
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12'>
+        <h3>Average Days Per SC</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="average" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="AverageSCLast"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="AverageSCSmax"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="AverageSCSmin"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="AverageSCSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>   
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-12'>
+        <h3>Metric Purchase Order Cycle Time</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="cycletime" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="POTimeLast"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="POTimeSmax"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="POTimeSmin"></b> Days</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="POTimeSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>  
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+$.ajax({
+    method: "GET",
+    url: '/api/monthlabels/',
+    success: function(data){
+        monthLabels = data.labels
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+var sPaymentData = [];
+
+$.ajax({
+    method: "GET",
+    url: '/api/paymenttime/',
+    success: function(data){
+        sPaymentData = data.default
+        document.getElementById("sPaymentTimeLast").innerHTML += data.last.toFixed(3)
+        document.getElementById("sPaymentTimeSmax").innerHTML += data.smax
+        document.getElementById("sPaymentTimeSmin").innerHTML += data.smin
+        document.getElementById("sPaymentTimeSnorm").innerHTML += data.snorm.toFixed(3)
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+$.ajax({
+    method: "GET",
+    url: '/api/laborcost/',
+    success: function(data){
+        laborCostData = data.default
+        document.getElementById("lastLaborCost").innerHTML += data.last.toFixed(2)
+        document.getElementById("maxLaborCost").innerHTML += data.max
+        document.getElementById("minLaborCost").innerHTML += data.min
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+$.ajax({
+    method: "GET",
+    url: '/api/materialcost/',
+    success: function(data){
+        materialCostData = data.default
+        document.getElementById("lastMaterialCost").innerHTML += data.last.toFixed(2)
+        document.getElementById("maxMaterialCost").innerHTML += data.max
+        document.getElementById("minMaterialCost").innerHTML += data.min
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("payment");
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: monthLabels,
+        datasets: [{
+            label: 'Authorize Supplier Payment Cycle Time',
+            data: sPaymentData,
+            backgroundColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+    });
+}
+// var ctx = document.getElementById("myChart");
+
+
+{% endblock %}
+</script>
+
+{% block content %}
+<h1 class="text-center">AUTHORIZE SUPPLIER PAYMENT PERFORMANCE</h1>
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "api-data" %}'>
+        <h3>Metric Authorize Supplier Payment Cycle Time</h3>
+        <div class='col-sm-9 text-center'>
+            <canvas id="payment" width="600" height="300"></canvas>
+        </div>
+        <div class='col-sm-3'>
+            <table class="h3">
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td><b id="sPaymentTimeLast"></b> days</td>
+                </tr>
+                <tr>
+                    <td>Smax</td>
+                    <td>:</td>
+                    <td><b id="sPaymentTimeSmax"></b> days</td>
+                </tr>
+                <tr>
+                    <td>Smin</td>
+                    <td>:</td>
+                    <td><b id="sPaymentTimeSmin"></b> days</td>
+                </tr>
+                <tr>
+                    <td>Score<br></td>
+                    <td>:</td>
+                    <td><b id="sPaymentTimeSnorm"></b> %</td>
+                </tr>
+            </table>
+        </div>    
+    </div>
+</div>
+
+{% endblock content %}

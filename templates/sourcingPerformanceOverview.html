@@ -1,0 +1,495 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+// Reliability
+
+$.ajax({
+  method: "GET",
+  url: '/api/forecastaccuracy/',
+  success: function(data){
+      document.getElementById("lastFA").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxFA").innerHTML += data.smax
+      document.getElementById("sminFA").innerHTML += data.smin
+      document.getElementById("snormFA").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreFA").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/schedulechangelt3d/',
+  success: function(data){
+      document.getElementById("lastSCinLT").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxSCinLT").innerHTML += data.smax
+      document.getElementById("sminSCinLT").innerHTML += data.smin
+      document.getElementById("snormSCinLT").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreSCinLT").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/totalbuy/',
+  success: function(data){
+      document.getElementById("lastFulfillment").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxFulfillment").innerHTML += data.smax
+      document.getElementById("sminFulfillment").innerHTML += data.smin
+      document.getElementById("snormFulfillment").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreFulfillment").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/ontime/',
+  success: function(data){
+      document.getElementById("lastOnTime").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxOnTime").innerHTML += data.smax
+      document.getElementById("sminOnTime").innerHTML += data.smin
+      document.getElementById("snormOnTime").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreOnTime").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/correctpackaging/',
+  success: function(data){
+      document.getElementById("lastPackaging").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxPackaging").innerHTML += data.smax
+      document.getElementById("sminPackaging").innerHTML += data.smin
+      document.getElementById("snormPackaging").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscorePackaging").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/correctcontent/',
+  success: function(data){
+      document.getElementById("lastContent").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxContent").innerHTML += data.smax
+      document.getElementById("sminContent").innerHTML += data.smin
+      document.getElementById("snormContent").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreContent").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/rejection/',
+  success: function(data){
+      document.getElementById("lastReject").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxReject").innerHTML += data.smax
+      document.getElementById("sminReject").innerHTML += data.smin
+      document.getElementById("snormReject").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreReject").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+// Responsiveness
+
+
+$.ajax({
+  method: "GET",
+  url: '/api/planningtime/',
+  success: function(data){
+      document.getElementById("lastPlanningTime").innerHTML += data.value.toFixed(3)
+      document.getElementById("smaxPlanningTime").innerHTML += data.smax
+      document.getElementById("sminPlanningTime").innerHTML += data.smin
+      document.getElementById("snormPlanningTime").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscorePlanningTime").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/averagesc/',
+  success: function(data){
+      document.getElementById("lastAverageSC").innerHTML += data.last.toFixed(3)
+      document.getElementById("smaxAverageSC").innerHTML += data.smax
+      document.getElementById("sminAverageSC").innerHTML += data.smin
+      document.getElementById("snormAverageSC").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreAverageSC").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+
+$.ajax({
+  method: "GET",
+  url: '/api/receivingtime/',
+  success: function(data){
+      document.getElementById("lastReceivingTime").innerHTML += data.last.toFixed(3)
+      document.getElementById("smaxReceivingTime").innerHTML += data.smax
+      document.getElementById("sminReceivingTime").innerHTML += data.smin
+      document.getElementById("snormReceivingTime").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreReceivingTime").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+
+$.ajax({
+  method: "GET",
+  url: '/api/verifytime/',
+  success: function(data){
+      document.getElementById("lastVerifyTime").innerHTML += data.last.toFixed(3)
+      document.getElementById("smaxVerifyTime").innerHTML += data.smax
+      document.getElementById("sminVerifyTime").innerHTML += data.smin
+      document.getElementById("snormVerifyTime").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreVerifyTime").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/transfertime/',
+  success: function(data){
+      document.getElementById("lastTransferTime").innerHTML += data.last.toFixed(3)
+      document.getElementById("smaxTransferTime").innerHTML += data.smax
+      document.getElementById("sminTransferTime").innerHTML += data.smin
+      document.getElementById("snormTransferTime").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreTransferTime").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+
+$.ajax({
+  method: "GET",
+  url: '/api/paymenttime/',
+  success: function(data){
+      document.getElementById("lastPaymentTime").innerHTML += data.last.toFixed(3)
+      document.getElementById("smaxPaymentTime").innerHTML += data.smax
+      document.getElementById("sminPaymentTime").innerHTML += data.smin
+      document.getElementById("snormPaymentTime").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscorePaymentTime").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+
+$.ajax({
+  method: "GET",
+  url: '/api/potime/',
+  success: function(data){
+      document.getElementById("lastPOTime").innerHTML += data.last.toFixed(3)
+      document.getElementById("smaxPOTime").innerHTML += data.smax
+      document.getElementById("sminPOTime").innerHTML += data.smin
+      document.getElementById("snormPOTime").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscorePOTime").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+// Sourcing
+
+$.ajax({
+  method: "GET",
+  url: '/api/laborcost/',
+  success: function(data){
+      document.getElementById("lastLaborCost").innerHTML += data.last
+      document.getElementById("smaxLaborCost").innerHTML += data.smax
+      document.getElementById("sminLaborCost").innerHTML += data.smin
+      document.getElementById("snormLaborCost").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreLaborCost").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+$.ajax({
+  method: "GET",
+  url: '/api/materialcost/',
+  success: function(data){
+      document.getElementById("lastMaterialCost").innerHTML += data.last.toFixed(3)
+      document.getElementById("smaxMaterialCost").innerHTML += data.smax
+      document.getElementById("sminMaterialCost").innerHTML += data.smin
+      document.getElementById("snormMaterialCost").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreMaterialCost").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+// IDOS
+
+$.ajax({
+  method: "GET",
+  url: '/api/idos/',
+  success: function(data){
+      document.getElementById("lastIDoS").innerHTML += data.value
+      document.getElementById("smaxIDoS").innerHTML += data.smax
+      document.getElementById("sminIDoS").innerHTML += data.smin
+      document.getElementById("snormIDoS").innerHTML += data.snorm.toFixed(3)
+      document.getElementById("fscoreIDoS").innerHTML += data.fscore.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+// Score
+
+$.ajax({
+  method: "GET",
+  url: '/api/score/',
+  success: function(data){
+      document.getElementById("greliability").innerHTML += data.greliability.toFixed(3)
+      document.getElementById("gresponsiveness").innerHTML += data.gresponsiveness.toFixed(3)
+      document.getElementById("gsourcing_cost").innerHTML += data.gsourcing_cost.toFixed(3)
+      document.getElementById("gasset_management").innerHTML += data.gasset_management.toFixed(3)
+      document.getElementById("gtotal_score").innerHTML += data.gtotal_score.toFixed(3)
+      document.getElementById("lreliability").innerHTML += data.lreliability.toFixed(3)
+      document.getElementById("lresponsiveness").innerHTML += data.lresponsiveness.toFixed(3)
+      document.getElementById("lsourcing_cost").innerHTML += data.lsourcing_cost.toFixed(3)
+      document.getElementById("lasset_management").innerHTML += data.lasset_management.toFixed(3)
+  },
+  error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+  }
+})
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+<h1 class="text-center">SOURCING PERFORMANCE OVERVIEW</h1>
+
+<table class="table table-striped">
+    <tr>
+      <th >Atribut Kinerja</th>
+      <th >Metrik</th>
+      <th >Value</th>
+      <th >Max</th>
+      <th >Min</th>
+      <th >Score</th>
+      <th >Overall Score</th>
+    </tr>
+    <tr>
+      <td rowspan="7"><span style="font-weight:bold">Reliability</span></td>
+      <td >Forecast Accuracy</td>
+      <td ><p id="lastFA"></p></td>
+      <td ><p id="smaxFA"></p></td>
+      <td ><p id="sminFA"></p></td>
+      <td ><p id="snormFA"></p></td>
+      <td ><p id="fscoreFA"></p></td>
+    </tr>
+    <tr>
+      <td >% Schedules Changed within Supplier's Lead Time</td>
+      <td ><p id="lastSCinLT"></p></td>
+      <td ><p id="smaxSCinLT"></p></td>
+      <td ><p id="sminSCinLT"></p></td>
+      <td ><p id="snormSCinLT"></p></td>
+      <td ><p id="fscoreSCinLT"></p></td>
+    </tr>
+    <tr>
+      <td >% Orders Processed Complete</td>
+      <td ><p id="lastFulfillment"></p></td>
+      <td ><p id="smaxFulfillment"></p></td>
+      <td ><p id="sminFulfillment"></p></td>
+      <td ><p id="snormFulfillment"></p></td>
+      <td ><p id="fscoreFulfillment"></p></td>
+    </tr>
+    <tr>
+      <td >% Orders Received On-Time To Demand Requirement</td>
+      <td ><p id="lastOnTime"></p></td>
+      <td ><p id="smaxOnTime"></p></td>
+      <td ><p id="sminOnTime"></p></td>
+      <td ><p id="snormOnTime"></p></td>
+      <td ><p id="fscoreOnTime"></p></td>
+    </tr>
+    <tr>
+      <td >% Orders Received with Correct Packaging</td>
+      <td ><p id="lastPackaging"></p></td>
+      <td ><p id="smaxPackaging"></p></td>
+      <td ><p id="sminPackaging"></p></td>
+      <td ><p id="snormPackaging"></p></td>
+      <td ><p id="fscorePackaging"></p></td>
+    </tr>
+    <tr>
+      <td >% Orders Received with Correct Content</td>
+      <td ><p id="lastContent"></p></td>
+      <td ><p id="smaxContent"></p></td>
+      <td ><p id="sminContent"></p></td>
+      <td ><p id="snormContent"></p></td>
+      <td ><p id="fscoreContent"></p></td>
+    </tr>
+    <tr>
+      <td >Supplier Rejection Rate</td>
+      <td ><p id="lastReject"></p></td>
+      <td ><p id="smaxReject"></p></td>
+      <td ><p id="sminReject"></p></td>
+      <td ><p id="snormReject"></p></td>
+      <td ><p id="fscoreReject"></p></td>
+    </tr>
+    <tr>
+      <td class="text-right warning" colspan="5"><span style="font-weight:bold">Reliability Score</span></td>
+      <td class="warning"><p id="lreliability"></p></td>
+      <td class="warning"><p id="greliability"></p></td>
+    </tr>
+    <tr>
+      <td  rowspan="7"><span style="font-weight:bold">Responsiveness<br>(Source Cycle Time)</span></td>
+      <td >Planning Cycle Time</td>
+      <td ><p id="lastPlanningTime"></p></td>
+      <td ><p id="smaxPlanningTime"></p></td>
+      <td ><p id="sminPlanningTime"></p></td>
+      <td ><p id="snormPlanningTime"></p></td>
+      <td ><p id="fscorePlanningTime"></p></td>
+    </tr>
+    <tr>
+      <td >Average Days per Schedule Change</td>
+      <td ><p id="lastAverageSC"></p></td>
+      <td ><p id="smaxAverageSC"></p></td>
+      <td ><p id="sminAverageSC"></p></td>
+      <td ><p id="snormAverageSC"></p></td>
+      <td ><p id="fscoreAverageSC"></p></td>
+    </tr>
+    <tr>
+      <td >Receiving Product Cycle Time</td>
+      <td ><p id="lastReceivingTime"></p></td>
+      <td ><p id="smaxReceivingTime"></p></td>
+      <td ><p id="sminReceivingTime"></p></td>
+      <td ><p id="snormReceivingTime"></p></td>
+      <td ><p id="fscoreReceivingTime"></p></td>
+    </tr>
+    <tr>
+      <td >Verify Product Cycle Time</td>
+      <td ><p id="lastVerifyTime"></p></td>
+      <td ><p id="smaxVerifyTime"></p></td>
+      <td ><p id="sminVerifyTime"></p></td>
+      <td ><p id="snormVerifyTime"></p></td>
+      <td ><p id="fscoreVerifyTime"></p></td>
+    </tr>
+    <tr>
+      <td >Transfer Product Cycle Time</td>
+      <td ><p id="lastTransferTime"></p></td>
+      <td ><p id="smaxTransferTime"></p></td>
+      <td ><p id="sminTransferTime"></p></td>
+      <td ><p id="snormTransferTime"></p></td>
+      <td ><p id="fscoreTransferTime"></p></td>
+    </tr>
+    <tr>
+      <td >Authorize Supplier Payment Cycle Time</td>
+      <td ><p id="lastPaymentTime"></p></td>
+      <td ><p id="smaxPaymentTime"></p></td>
+      <td ><p id="sminPaymentTime"></p></td>
+      <td ><p id="snormPaymentTime"></p></td>
+      <td ><p id="fscorePaymentTime"></p></td>
+    </tr>
+    <tr>
+      <td >Purchase Order Cycle Time</td>
+      <td ><p id="lastPOTime"></p></td>
+      <td ><p id="smaxPOTime"></p></td>
+      <td ><p id="sminPOTime"></p></td>
+      <td ><p id="snormPOTime"></p></td>
+      <td ><p id="fscorePOTime"></p></td>
+    </tr>
+    <tr>
+      <td class="text-right warning" colspan="5"><span style="font-weight:bold">Responsiveness Score</span></td>
+      <td class="warning"><p id="lresponsiveness"></p></td>
+      <td class="warning"><p id="gresponsiveness"></p></td>
+    </tr>
+    <tr>
+      <td  rowspan="2"><span style="font-weight:bold">Sourcing Cost</span></td>
+      <td >Sourcing Labor Cost</td>
+      <td ><p id="lastLaborCost"></p></td>
+      <td ><p id="smaxLaborCost"></p></td>
+      <td ><p id="sminLaborCost"></p></td>
+      <td ><p id="snormLaborCost"></p></td>
+      <td ><p id="fscoreLaborCost"></p></td>
+    </tr>
+    <tr>
+      <td >Purchased Material Cost</td>
+      <td ><p id="lastMaterialCost"></p></td>
+      <td ><p id="smaxMaterialCost"></p></td>
+      <td ><p id="sminMaterialCost"></p></td>
+      <td ><p id="snormMaterialCost"></p></td>
+      <td ><p id="fscoreMaterialCost"></p></td>
+    </tr>
+    <tr>
+      <td class="text-right warning" colspan="5"><span style="font-weight:bold">Sourcing Cost Score</span></td>
+      <td class="warning"><p id="lsourcing_cost"></p></td>
+      <td class="warning"><p id="gsourcing_cost"></p></td>
+    </tr>
+    <tr>
+      <td ><span style="font-weight:bold">Asset Management</span></td>
+      <td >Inventory Days of Supply</td>
+      <td ><p id="lastIDoS"></p></td>
+      <td ><p id="smaxIDoS"></p></td>
+      <td ><p id="sminIDoS"></p></td>
+      <td ><p id="snormIDoS"></p></td>
+      <td ><p id="fscoreIDoS"></p></td>
+    </tr>
+    <tr>
+      <td class="text-right warning" colspan="5"><span style="font-weight:bold">Asset Management Score</span></td>
+      <td class="warning"><p id="lasset_management"></p></td>
+      <td class="warning"><p id="gasset_management"></p></td>
+    </tr>
+    <tr>
+      <td class="text-right success" colspan="6"><span style="font-weight:bold">Total Score</span></td>
+      <td class="success"><p id="gtotal_score"></p></td>
+    </tr>
+  </table>
+{% endblock content %}
